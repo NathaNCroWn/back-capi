@@ -28,7 +28,7 @@ def actualizar_producto(request, id):
     return Response({'mensaje':'prodcuto no encontrado'}, status=404)
 
 @api_view(['DELETE'])
-def eliminar_producto(id):
+def eliminar_producto( request, id):
     producto= Producto.objects.get(id=id)
     producto.delete()
     return Response({'mensaje':'producto eliminado'}, status=200)
