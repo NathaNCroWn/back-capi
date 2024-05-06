@@ -9,7 +9,7 @@ def crear_producto(request):
    
     if serializer.is_valid():
         serializer.save()
-        return Response({'mensaje':'producto creado'}, status=201)
+        return Response("producto creado")
     return Response({'mensaje':'error'}, status=400)
 
 @api_view(['GET'])
@@ -18,14 +18,22 @@ def ver_producto(request):
     serializer=productoSerializers(producto, many=True)
     return Response(serializer.data, status=200)
 
+@api_view(['GET'])
+def ver_producto_id(request, id):
+    producto=Producto.objects.get(id=id)
+    serializer=productoSerializers(producto)
+    return Response(serializer.data, status=200)
+
 @api_view(['PUT'])
 def actualizar_producto(request, id):
     producto=Producto.objects.get(id=id)
-    serializer=productoSerializers(producto, data=request.data) 
+    if producto is None:
+        return Response({'mensaje':'producto no encontrado'}, status=404)
+    serializer=productoSerializers(producto, data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({'mesaje':'producto actualizado'}, status=200)
-    return Response({'mensaje':'prodcuto no encontrado'}, status=404)
+        return Response("producto actualizado")
+    return Response({'error'}, status=500)
 
 @api_view(['DELETE'])
 def eliminar_producto( request, id):
